@@ -55,16 +55,7 @@ def output_list_of_insureds(xl_list_of_dict):
     print ('list_of_insureds: {}'.format(list_of_insureds))
     return list_of_insureds
 
-
-if __name__ == "__main__":
-    # Script run thru debugger
-    xl_list_of_dict = transform_xl_to_list_of_dict()
-        
-    # output a list of the insureds names
-    list_of_insureds = output_list_of_insureds(xl_list_of_dict)
-
-    # Convert "First M  Last" to "Last, First"
-    strinng = ''
+def convert_fml_to_lcf(list_of_insureds):
     for name in list_of_insureds:
         double_space = len(name) - (name.find("  ")+2) 
         first_space = name.find(" ")
@@ -74,6 +65,16 @@ if __name__ == "__main__":
         print('last_name, len: {}, {}'.format(last_name, len(last_name)))
         lastcommafirst = last_name + ", " + first_name
         print(lastcommafirst)
+
+if __name__ == "__main__":
+    # Script run thru debugger
+    xl_list_of_dict = transform_xl_to_list_of_dict()
+        
+    # output a list of the insureds names
+    list_of_insureds = output_list_of_insureds(xl_list_of_dict)
+
+    # Convert "First M  Last" to "Last, First"
+    convert_fml_to_lcf(list_of_insureds)
 
 
 
