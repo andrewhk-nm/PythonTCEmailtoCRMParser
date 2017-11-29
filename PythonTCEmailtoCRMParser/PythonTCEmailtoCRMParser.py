@@ -40,14 +40,6 @@ def transform_xl_to_list_of_dict(filename, header_row=9, data_row=10):
     #print(data)
     return data
 
-def importXLS(workbook):
-    '''
-    take a workbook filename
-    open it
-    output the rows of TC info.
-    '''
-    pass
-
 
 def output_list_of_insureds(xl_list_of_dict):
     '''
@@ -94,5 +86,22 @@ if __name__ == "__main__":
     # Convert "First M  Last" to "Last, First"
     convert_fml_to_lcf(list_of_insureds)
 
+    # output a CSV file in the correct format for import into CRM
+    
+    #create a list of the correct CRM headers from an example file
+    CRM_Header_filename = r"C:\Users\perm7158\Documents\Projects\Call RE Term Conversions\CRM_Headers.csv"
+    with open(CRM_Header_filename,encoding='utf-8') as a_file:
 
+        a_str = a_file.read()
+        a_str_list_of_headers = a_str.split(sep=",")
+
+        print(a_str)
+        print(a_str_list_of_headers)
+
+    CRM_output_filename = r"C:\Users\perm7158\Documents\Projects\Call RE Term Conversions\CRM_Output.csv"
+    with open(CRM_output_filename,encoding='utf-8',mode='w') as b_file:
+        # write the header row to a file
+        b_file.write(a_str)
+
+        
 
