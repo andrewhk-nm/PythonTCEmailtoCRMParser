@@ -11,6 +11,7 @@ import os
 # import glob
 import xlrd
 # import re #I used string methods instead
+import datetime
 
 def transform_xl_to_list_of_dict(filename, header_row=9, data_row=10):
     '''
@@ -71,23 +72,13 @@ def convert_fml_to_lcf(list_of_insureds):
         print(lastcommafirst)
         list_of_insureds_lcf.append(lastcommafirst)
 
+    return list_of_insureds_lcf
 
-if __name__ == "__main__":
-
-    #test file
-    filename = 'C:\\Users\\perm7158\\Documents\\Projects\\Call RE Term Conversions\\Script\\06525_TC_1488954325929.xls'
-
-    # Script run thru debugger
-    xl_list_of_dict = transform_xl_to_list_of_dict(filename)
-        
-    # output a list of the insureds names
-    list_of_insureds = output_list_of_insureds(xl_list_of_dict)
-
-    # Convert "First M  Last" to "Last, First"
-    convert_fml_to_lcf(list_of_insureds)
-
-    # output a CSV file in the correct format for import into CRM
-    
+def output_CSV_file(list_of_insureds_lcf):
+    '''
+    Takes a list of insured's names in last, first format, and outputs a CSV file for import into CRM.
+    Returns nothing
+    '''
     #create a list of the correct CRM headers from an example file
     CRM_Header_filename = r"C:\Users\perm7158\Documents\Projects\Call RE Term Conversions\CRM_Headers.csv"
     #(Do Not Modify) Phone Call,(Do Not Modify) Row Checksum,(Do Not Modify) Modified On,Due,Recipient,Assigned To,Subject,Regarding
@@ -103,16 +94,22 @@ if __name__ == "__main__":
     # create a list of strings. The first list will be the row number (index 0 = header row 1), and that will contain the row that should be printed
     output_row_list = []
     output_row_list.append(crm_header_string)
-    # Create data row 1
-    test_string = "Hello {name}".format(name="Bob")
-    print(test_string)
-    data_row_1_string = ",,,{DUE},{RECIPIENT},{ASSIGNED_TO},{SUBJECT},{REGARDING}".format(DUE="11/20/2017",
-                                                                                           RECIPIENT="Aardvark, Aaron",
-                                                                                           ASSIGNED_TO="Rang, Joshua",
-                                                                                           SUBJECT="TC - Script Test",
-                                                                                           REGARDING="Aardvark, Aaron")
-    print("data_row_1_string: {}".format(data_row_1_string))
     
+
+    # Create data rows
+    datetime_today = datetime.datetime.today()
+    due = datetime_today.strftime("%m/%d/%Y") + " 8:00:00 AM"
+    assigned_to = "Henning-Kolberg, Andrew"
+    subject = "TC - Script Test"
+    on_behalf_of_team = "Rang, Joshua David 006525"
+    for insured in list_of_insureds_lcf:
+        data_row_string = '{DUE},"{RECIPIENT}","{ASSIGNED_TO}","{SUBJECT}","{REGARDING}","{ON_BEHALF_OF_TEAM}"\n'.format(DUE=due,
+                                                                                            RECIPIENT=insured,
+                                                                                            ASSIGNED_TO=assigned_to,
+                                                                                            SUBJECT=subject,
+                                                                                            REGARDING=insured,
+                                                                                            ON_BEHALF_OF_TEAM=on_behalf_of_team)
+        output_row_list.append(data_row_string)
     
 
 
@@ -122,7 +119,29 @@ if __name__ == "__main__":
     #,,,11/30/2017 8:00:00 AM,"Aardvark, Aaron","Rang, Joshua",TC - Minimal Test,"Aardvark, Aaron"
     with open(CRM_output_filename,encoding='utf-8',mode='w') as b_file:
         # write the header row to a file
-        b_file.write(crm_header_string)
+        #$b_file.write(crm_header_string)
+        for row in output_row_list:
+            b_file.write(row)
+
+if __name__ == "__main__":
+
+    #test file
+    filename = 'C:\\Users\\perm7158\\Documents\\Projects\\Call RE Term Conversions\\Script\\06525_TC_1488954325929.xls'
+
+    # Script run thru debugger
+    xl_list_of_dict = transform_xl_to_list_of_dict(filename)
+        
+    # output a list of the insureds names
+    list_of_insureds = output_list_of_insureds(xl_list_of_dict)
+
+    # Convert "First M  Last" to "Last, First"
+    list_of_insureds_lcf = convert_fml_to_lcf(list_of_insureds)
+
+
+
+    # output a CSV file in the correct format for import into CRM
+    output_CSV_file(list_of_insureds_lcf)
+
 
         
 
