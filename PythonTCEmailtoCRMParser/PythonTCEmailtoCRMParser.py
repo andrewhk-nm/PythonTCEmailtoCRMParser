@@ -5,6 +5,9 @@ Create a CSV file as output, with the columns needed to import into CRM
 Maybe use API to auto import
 
 TDD?
+
+Created the release branch
+
 '''
 
 import os
