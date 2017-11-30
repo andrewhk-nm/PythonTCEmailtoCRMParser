@@ -90,18 +90,39 @@ if __name__ == "__main__":
     
     #create a list of the correct CRM headers from an example file
     CRM_Header_filename = r"C:\Users\perm7158\Documents\Projects\Call RE Term Conversions\CRM_Headers.csv"
-    with open(CRM_Header_filename,encoding='utf-8') as a_file:
+    #(Do Not Modify) Phone Call,(Do Not Modify) Row Checksum,(Do Not Modify) Modified On,Due,Recipient,Assigned To,Subject,Regarding
+    with open(CRM_Header_filename,encoding='utf-8') as crm_header_file:
 
-        a_str = a_file.read()
-        a_str_list_of_headers = a_str.split(sep=",")
+        crm_header_string = crm_header_file.read()
+        crm_list_of_headers = crm_header_string.split(sep=",")
 
-        print(a_str)
-        print(a_str_list_of_headers)
+        print(crm_header_string)
+        print(crm_list_of_headers)
+    
 
+    # create a list of strings. The first list will be the row number (index 0 = header row 1), and that will contain the row that should be printed
+    output_row_list = []
+    output_row_list.append(crm_header_string)
+    # Create data row 1
+    test_string = "Hello {name}".format(name="Bob")
+    print(test_string)
+    data_row_1_string = ",,,{DUE},{RECIPIENT},{ASSIGNED_TO},{SUBJECT},{REGARDING}".format(DUE="11/20/2017",
+                                                                                           RECIPIENT="Aardvark, Aaron",
+                                                                                           ASSIGNED_TO="Rang, Joshua",
+                                                                                           SUBJECT="TC - Script Test",
+                                                                                           REGARDING="Aardvark, Aaron")
+    print("data_row_1_string: {}".format(data_row_1_string))
+    
+    
+
+
+    # Print the header to the Output file, and then the list of insureds along with call details
     CRM_output_filename = r"C:\Users\perm7158\Documents\Projects\Call RE Term Conversions\CRM_Output.csv"
+    #(Do Not Modify) Phone Call,(Do Not Modify) Row Checksum,(Do Not Modify) Modified On,Due,Recipient,Assigned To,Subject,Regarding
+    #,,,11/30/2017 8:00:00 AM,"Aardvark, Aaron","Rang, Joshua",TC - Minimal Test,"Aardvark, Aaron"
     with open(CRM_output_filename,encoding='utf-8',mode='w') as b_file:
         # write the header row to a file
-        b_file.write(a_str)
+        b_file.write(crm_header_string)
 
         
 
