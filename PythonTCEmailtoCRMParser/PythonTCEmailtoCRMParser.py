@@ -12,7 +12,7 @@ Created the develop branch
 '''
 
 import os
-# import glob
+import glob
 import xlrd
 # import re #I used string methods instead
 import datetime
@@ -66,7 +66,7 @@ def convert_fml_to_lcf(list_of_insureds):
     '''
     list_of_insureds_lcf = []
     for name in list_of_insureds:
-        double_space = len(name) - (name.find("  ")+2) 
+        double_space = len(name) - (name.find("  ") + 2) 
         first_space = name.find(" ")
         first_name = name[0:first_space]
         #print('first_name, len: {}, {}'.format(first_name, len(first_name)))
@@ -78,9 +78,9 @@ def convert_fml_to_lcf(list_of_insureds):
 
     return list_of_insureds_lcf
 
-def output_CSV_file(list_of_insureds_lcf):
+def output_CSV_file(set_of_insureds_lcf):
     '''
-    Takes a list of insured's names in last, first format, and outputs a CSV file for import into CRM.
+    Takes a set of insured's names in last, first format, and outputs a CSV file for import into CRM.
     Returns nothing
     '''
     #create a list of the correct CRM headers from an example file
@@ -106,7 +106,7 @@ def output_CSV_file(list_of_insureds_lcf):
     assigned_to = "Henning-Kolberg, Andrew"
     subject = "TC - Script Test"
     on_behalf_of_team = "Rang, Joshua David 006525"
-    for insured in list_of_insureds_lcf:
+    for insured in set_of_insureds_lcf:
         data_row_string = '{DUE},"{RECIPIENT}","{ASSIGNED_TO}","{SUBJECT}","{REGARDING}","{ON_BEHALF_OF_TEAM}"\n'.format(DUE=due,
                                                                                             RECIPIENT=insured,
                                                                                             ASSIGNED_TO=assigned_to,
@@ -127,24 +127,54 @@ def output_CSV_file(list_of_insureds_lcf):
         for row in output_row_list:
             b_file.write(row)
 
+def yield_TC_filenames(default_directory = 'C:\\Users\\perm7158\\Documents\\Projects\\Call RE Term Conversions\\Script\\'):
+    '''
+    Generator Function
+    Gets a list of all file names in the default directory that match the TC sheet pattern.
+    Yields one file name at a time.
+    '''
+    # Get the list of all TC files
+    dir_files = glob.glob(default_directory + '*_TC_*.xls')
+    # Extend the list to include the APB files
+    # Not right now, the sheet is formatted differently so I'll have to modify it to work (just different starting rows)
+    #dir_files.extend glob.glob(default_directory + '*_APB_*.xls')
+    print(dir_files)
+    for filename in dir_files:
+        yield filename
+
+
+
 if __name__ == "__main__":
 
-    #test file
-    filename = 'C:\\Users\\perm7158\\Documents\\Projects\\Call RE Term Conversions\\Script\\06525_TC_1488954325929.xls'
+    ##test file
+    #filename = 'C:\\Users\\perm7158\\Documents\\Projects\\Call RE Term Conversions\\Script\\06525_TC_1488954325929.xls'
 
-    # Script run thru debugger
-    xl_list_of_dict = transform_xl_to_list_of_dict(filename)
+    # Get list of all file names in the default directory
+    #filename = yield_TC_filenames()
+    
+    # Make sure each list (or set) is empty to start
+    xl_list_of_dict = []
+    list_of_insureds = []
+    list_of_insureds_lcf = []
+    set_of_insureds_lcf = {}
+
+    # Add the results of each file name parsing to the final list via extend.
+    for filename in yield_TC_filenames():
+        # Output a list of dictionaries based on the workbook
+        xl_list_of_dict = transform_xl_to_list_of_dict(filename)
         
-    # output a list of the insureds names
-    list_of_insureds = output_list_of_insureds(xl_list_of_dict)
+        # output a list of the insureds names
+        list_of_insureds = output_list_of_insureds(xl_list_of_dict)
 
-    # Convert "First M  Last" to "Last, First"
-    list_of_insureds_lcf = convert_fml_to_lcf(list_of_insureds)
+        # Convert "First M  Last" to "Last, First"
+        #list_of_insureds_lcf.
+        list_of_insureds_lcf.extend(convert_fml_to_lcf(list_of_insureds))
+        
 
 
-
+    set_of_insureds_lcf = set(list_of_insureds_lcf)
     # output a CSV file in the correct format for import into CRM
-    output_CSV_file(list_of_insureds_lcf)
+    output_CSV_file(set_of_insureds_lcf)
 
 
         
