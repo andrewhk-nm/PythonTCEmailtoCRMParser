@@ -3,19 +3,24 @@ Take the emailed Excel xls TC sheet as input (command line args?)
 Parse the needed info (Name (Last, First), Last Conversion Date)
 Create a CSV file as output, with the columns needed to import into CRM
 Maybe use API to auto import
-
-TDD?
-
-Created the release branch
-Created the develop branch
-
 '''
+
+# TODO
+# TDD?
+# default to the directory the script is run in?
+#
+# DONE
+# Created the release branch
+# Created the develop branch
+
 
 import os
 import glob
 import xlrd
 # import re #I used string methods instead
 import datetime
+# Noll recommended I check out this library
+import csv
 
 def transform_xl_to_list_of_dict(filename, header_row=9, data_row=10):
     '''
@@ -127,7 +132,7 @@ def output_CSV_file(set_of_insureds_lcf):
         for row in output_row_list:
             b_file.write(row)
 
-def yield_TC_filenames(default_directory = 'C:\\Users\\perm7158\\Documents\\Projects\\Call RE Term Conversions\\Script\\'):
+def yield_TC_filenames(default_directory = 'C:\\Users\\perm7158\\Documents\\Projects\\Call RE Term Conversions\\'):
     '''
     Generator Function
     Gets a list of all file names in the default directory that match the TC sheet pattern.
@@ -175,6 +180,8 @@ if __name__ == "__main__":
     set_of_insureds_lcf = set(list_of_insureds_lcf)
     # output a CSV file in the correct format for import into CRM
     output_CSV_file(set_of_insureds_lcf)
+
+    
 
 
         
