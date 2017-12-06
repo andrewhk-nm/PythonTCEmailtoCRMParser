@@ -8,9 +8,11 @@ Maybe use API to auto import
 # TODO
 # TDD?
 # default to the directory the script is run in?
-# Move processed files to completed directory
+# Process APB files
+# Add "Last Conversion Date" to comments of Phone Call
 #
 # DONE
+# 2017-12-06 Move processed files to completed directory
 # Created the release branch
 # Created the develop branch
 
@@ -49,7 +51,34 @@ def transform_xl_to_list_of_dict(filename, header_row=9, data_row=10):
             elm[first_row[col]]=worksheet.cell_value(row,col)
         data.append(elm)
     #print(data)
+
+    # Have xlrd close the workbook
+    workbook.release_resources()
+            
+    # Move the file to the "/Processed" subfolder
+    move_to_processed_folder(filename)
+    
     return data
+
+def move_to_processed_folder(path_filename):
+    '''
+    take a filename and path 'path_filename' and move it to 'processed/filename'. 
+    create the 'processed' folder if not yet created.
+    return nothing
+    '''
+    path, filename = os.path.split(path_filename)
+    
+    processed_path = os.path.join(path + '/processed')
+    try:
+        os.mkdir(processed_path)
+        print('created directory: {}'.format(processed_path))
+    except FileExistsError:
+        # Folder already exists, so it doesn't need to be created. Do nothing.
+        print('directory exists: {}'.format(processed_path))
+    # Move the file to the 'processed' directory
+    os.rename(path_filename,os.path.join(processed_path, filename))
+
+    
 
 
 def output_list_of_insureds(xl_list_of_dict):
@@ -168,7 +197,7 @@ if __name__ == "__main__":
     for filename in yield_TC_filenames():
         # Output a list of dictionaries based on the workbook
         xl_list_of_dict = transform_xl_to_list_of_dict(filename)
-        
+
         # output a list of the insureds names
         list_of_insureds = output_list_of_insureds(xl_list_of_dict)
 
