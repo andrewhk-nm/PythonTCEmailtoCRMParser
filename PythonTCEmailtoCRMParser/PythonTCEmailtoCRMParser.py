@@ -8,6 +8,7 @@ Maybe use API to auto import
 # TODO
 # TDD?
 # default to the directory the script is run in?
+#   definitely need to take out the hard coded paths at the very least
 # Process APB files
 # Add "Last Conversion Date" to comments of Phone Call
 #
