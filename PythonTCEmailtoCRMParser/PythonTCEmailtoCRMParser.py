@@ -8,6 +8,7 @@ Maybe use API to auto import
 # TODO
 # TDD?
 # default to the directory the script is run in?
+# Move processed files to completed directory
 #
 # DONE
 # Created the release branch
@@ -108,8 +109,8 @@ def output_CSV_file(set_of_insureds_lcf):
     # Create data rows
     datetime_today = datetime.datetime.today()
     due = datetime_today.strftime("%m/%d/%Y") + " 8:00:00 AM"
-    assigned_to = "Henning-Kolberg, Andrew"
-    subject = "TC - Script Test"
+    assigned_to = "Rang, Joshua"
+    subject = "TC"
     on_behalf_of_team = "Rang, Joshua David 006525"
     for insured in set_of_insureds_lcf:
         data_row_string = '{DUE},"{RECIPIENT}","{ASSIGNED_TO}","{SUBJECT}","{REGARDING}","{ON_BEHALF_OF_TEAM}"\n'.format(DUE=due,
