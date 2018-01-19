@@ -120,7 +120,7 @@ def output_CSV_file(set_of_insureds_lcf):
     Returns nothing
     '''
     #create a list of the correct CRM headers from an example file
-    CRM_Header_filename = r"C:\Users\perm7158\Documents\Projects\Call RE Term Conversions\CRM_Headers.csv"
+    CRM_Header_filename = r"C:\Users\perm7158\Documents\_Josh\Projects\Call RE Term Conversions\CRM_Headers.csv"
     #(Do Not Modify) Phone Call,(Do Not Modify) Row Checksum,(Do Not Modify) Modified On,Due,Recipient,Assigned To,Subject,Regarding
     with open(CRM_Header_filename,encoding='utf-8') as crm_header_file:
 
@@ -154,7 +154,7 @@ def output_CSV_file(set_of_insureds_lcf):
 
 
     # Print the header to the Output file, and then the list of insureds along with call details
-    CRM_output_filename = r"C:\Users\perm7158\Documents\Projects\Call RE Term Conversions\Import_this_file_into_CRM.csv"
+    CRM_output_filename = r"C:\Users\perm7158\Documents\_Josh\Projects\Call RE Term Conversions\Import_this_file_into_CRM.csv"
     #(Do Not Modify) Phone Call,(Do Not Modify) Row Checksum,(Do Not Modify) Modified On,Due,Recipient,Assigned To,Subject,Regarding
     #,,,11/30/2017 8:00:00 AM,"Aardvark, Aaron","Rang, Joshua",TC - Minimal Test,"Aardvark, Aaron"
     with open(CRM_output_filename,encoding='utf-8',mode='w') as b_file:
@@ -163,7 +163,7 @@ def output_CSV_file(set_of_insureds_lcf):
         for row in output_row_list:
             b_file.write(row)
 
-def yield_TC_filenames(default_directory = 'C:\\Users\\perm7158\\Documents\\Projects\\Call RE Term Conversions\\'):
+def yield_TC_filenames(default_directory = 'C:\\Users\\perm7158\\Documents\\_Josh\\Projects\\Call RE Term Conversions'):
     '''
     Generator Function
     Gets a list of all file names in the default directory that match the TC sheet pattern.
@@ -183,10 +183,10 @@ def yield_TC_filenames(default_directory = 'C:\\Users\\perm7158\\Documents\\Proj
 if __name__ == "__main__":
 
     ##test file
-    #filename = 'C:\\Users\\perm7158\\Documents\\Projects\\Call RE Term Conversions\\Script\\06525_TC_1488954325929.xls'
+    #filename = 'C:\\Users\\perm7158\\Documents\\_Josh\\Projects\\Call RE Term Conversions\\Script\\06525_TC_1488954325929.xls'
 
     # Get list of all file names in the default directory
-    #filename = yield_TC_filenames()
+    filename_generator = yield_TC_filenames()
     
     # Make sure each list (or set) is empty to start
     xl_list_of_dict = []
@@ -195,7 +195,7 @@ if __name__ == "__main__":
     set_of_insureds_lcf = {}
 
     # Add the results of each file name parsing to the final list via extend.
-    for filename in yield_TC_filenames():
+    for filename in filename_generator:
         # Output a list of dictionaries based on the workbook
         xl_list_of_dict = transform_xl_to_list_of_dict(filename)
 
